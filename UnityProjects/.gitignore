@@ -88,3 +88,7 @@ crashlytics-build.properties
 */[Aa]ssets/TextMesh Pro*
 *.pfx
 *.pfx.meta
+
+#OpenCV
+*/[Aa]ssets/[Pp]lugins/[Aa]ndroid/**/libopencv_*
+*/[Aa]ssets/[Pp]lugins/x64/**/opencv_*
