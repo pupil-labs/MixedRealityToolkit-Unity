@@ -75,3 +75,6 @@ MSBuild/
 scripts/test/out/
 [Uu]serSettings/
 UWP/
+
+# Remove PICO SDK
+PICO Unity Integration SDK 230/

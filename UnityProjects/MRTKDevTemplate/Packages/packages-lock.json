@@ -327,6 +327,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.xr.picoxr": {
+      "version": "file:../../../PICO Unity Integration SDK 230",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.xr.management": "4.0.0",
+        "com.unity.xr.interaction.toolkit": "2.0.0"
+      }
+    },
     "org.mixedrealitytoolkit.accessibility": {
       "version": "file:../../../org.mixedrealitytoolkit.accessibility",
       "depth": 0,
