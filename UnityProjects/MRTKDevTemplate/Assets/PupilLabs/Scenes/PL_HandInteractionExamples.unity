@@ -7919,7 +7919,7 @@ PrefabInstance:
       value: '<size=8>Gaze Debug</size>
 
         <size=6><alpha=#88>Enable/disable
-        indirect gaze manipulation</size>'
+        debug ray visualization</size>'
       objectReference: {fileID: 0}
     - target: {fileID: 1922220768106560367, guid: c6b351a67ceb69140b199996bbbea156, type: 3}
       propertyPath: m_HorizontalAlignment
