@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/PupilLabs/Scenes/PL_Calibration.unity
     guid: 94abf84c8b7d7ba46ab72ab69d768c6a
+  - enabled: 1
+    path: Assets/PupilLabs/Scenes/PL_360.unity
+    guid: db4f145061ef4fe4096c505c839fb8f4
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 87467803e919cef4394e7f39c6521b51, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: e61946fb8f8ff5e418d6ebb56cca2034, type: 2}
