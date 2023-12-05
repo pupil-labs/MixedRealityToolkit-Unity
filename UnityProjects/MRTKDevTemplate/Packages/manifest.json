@@ -24,7 +24,7 @@
     "com.unity.xr.interaction.toolkit": "2.3.0",
     "com.unity.xr.management": "4.2.1",
     "com.unity.xr.openxr": "1.7.0",
-    "com.unity.xr.picoxr": "file:../../../PICO Unity Integration SDK 230",
+    "com.unity.xr.picoxr": "file:../../../PICO Unity Integration SDK",
     "org.mixedrealitytoolkit.accessibility": "file:../../../org.mixedrealitytoolkit.accessibility",
     "org.mixedrealitytoolkit.audio": "file:../../../org.mixedrealitytoolkit.audio",
     "org.mixedrealitytoolkit.core": "file:../../../org.mixedrealitytoolkit.core",
