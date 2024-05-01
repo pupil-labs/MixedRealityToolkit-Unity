@@ -11,7 +11,7 @@ public static class OpenCVWrapper
     [DllImport("OpenCVWrapper")]
     private static extern IntPtr CFree(IntPtr ptr);
 
-    public static bool GetCameraPose(Vector3[] objectPoints, Vector2[] imagePoints, float[] cameraMatrix, float[] distCoeffs, out Pose pose)
+    public static bool GetCameraPose(Vector3[] objectPoints, Vector3[] imagePoints, float[] cameraMatrix, float[] distCoeffs, out Pose pose)
     {
         List<float> objPoints = new List<float>();
         foreach (var p in objectPoints)

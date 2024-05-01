@@ -1,10 +1,10 @@
 using PupilLabs.Serializable;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace PupilLabs
+namespace PupilLabs.Calibration
 {
     public class EyeTrackingCalibration : MonoBehaviour
     {
@@ -13,6 +13,8 @@ namespace PupilLabs
         [SerializeField]
         private DataStorage storage;
         [SerializeField]
+        private PoseSolver solver;
+        [SerializeField]
         private Transform origin;
         [SerializeField]
         private Transform targets;
@@ -20,29 +22,18 @@ namespace PupilLabs
         private TMPro.TextMeshProUGUI outTxt;
         [SerializeField]
         private GameObject outUi;
-        [SerializeField]
-        private Transform objPointParent;
-        [SerializeField]
-        private GameObject objPointPrefab;
-        [SerializeField]
-        private Transform observedPointParent;
-        [SerializeField]
-        private GameObject observedPointPrefab;
+
         public DVector3Event calibrationFinished;
 
-        private bool canSave = true;
-
-        private Vector3 solvedPosition;
-        private Quaternion solvedRotation;
-
-        private List<Vector3> objPoints = new List<Vector3>();
-        private List<Vector2> imgPoints = new List<Vector2>();
-
-        private int nTargets;
-        private HashSet<int> processedIds = new HashSet<int>();
+        private bool canSave = false;
+        private Vector3 solvedPosition = Vector3.zero;
+        private Quaternion solvedRotation = Quaternion.identity;
+        private int currentTargetId = 0;
+        private CalibrationTarget[] calibrationTargets = null;
 
         private void Awake()
         {
+            outUi.SetActive(false);
             if (gazeDataProvider == null)
             {
                 gazeDataProvider = ServiceLocator.Instance.GazeDataProvider;
@@ -52,86 +43,55 @@ namespace PupilLabs
                 storage = ServiceLocator.Instance.GetComponentInChildren<DataStorage>(true);
             }
             calibrationFinished.AddListener(gazeDataProvider.SetGazeOrigin);
+            calibrationTargets = targets.GetComponentsInChildren<CalibrationTarget>();
 
-            objPointParent.gameObject.SetActive(false);
-            observedPointParent.gameObject.SetActive(false);
-            nTargets = targets.GetComponentsInChildren<CalibrationTarget>().Length;
-            for (int i = 0; i < nTargets; i++)
+            foreach (CalibrationTarget t in calibrationTargets)
             {
-                GameObject.Instantiate(objPointPrefab, objPointParent);
-                GameObject.Instantiate(observedPointPrefab, observedPointParent);
+                t.gameObject.SetActive(false);
             }
+            calibrationTargets[currentTargetId].gameObject.SetActive(true);
         }
 
-        public void AddObjPoint(Vector3 worldPos, int id)
+        private IEnumerator ShowNextRoutine()
         {
-            if (processedIds.Contains(id))
+            yield return new WaitUntil(() => calibrationTargets[currentTargetId] == null); //wait until current target is destroyed
+            calibrationTargets[++currentTargetId].gameObject.SetActive(true); //move to next target
+        }
+
+        public async Task Solve()
+        {
+            canSave = false;
+            solver.SetVisualizationActive(true); //prior to solve just to see live update of iterative kabsch
+            await solver.Solve();
+            solvedPosition = solver.Solution.GetPosition();
+            solvedRotation = solver.Solution.rotation;
+            canSave = true;
+
+            outTxt.SetText($"Pos: {solvedPosition.x}, {solvedPosition.y}, {solvedPosition.z}<br>Rot: {solvedRotation.eulerAngles.x}, {solvedRotation.eulerAngles.y}, {solvedRotation.eulerAngles.z}");
+            outUi.SetActive(true);
+            calibrationFinished.Invoke(solvedPosition, solvedRotation.eulerAngles);
+        }
+
+        public void AddObservation(Vector3 worldPos)
+        {
+            if (currentTargetId != solver.SampleCount) //ignore multiple submits of the same target
             {
                 return;
             }
-            processedIds.Add(id);
 
-            var localPos = targets.InverseTransformPoint(worldPos);
-            objPoints.Add(localPos);
-            var gazeDir = gazeDataProvider.RawGazeDir;
-            imgPoints.Add(gazeDir);
+            var localPos = origin.InverseTransformPoint(worldPos); //local in origin space
+            var gazeDir = gazeDataProvider.RawGazeDir; //local in sensor space
+            solver.AddSample(localPos, gazeDir);
 
-            Debug.Log($"[EyeTrackingCalibration] adding object point with worldpos: {worldPos} localpos: {localPos} and image point with gaze dir {gazeDir}");
+            Debug.Log($"[EyeTrackingCalibration] adding observation - worldpos: {worldPos} localpos: {localPos} gaze dir: {gazeDir}");
 
-            if (objPoints.Count == nTargets)
+            if (solver.SampleCount == calibrationTargets.Length)
             {
-                SolvePose();
-                Visualize();
-                imgPoints.Clear();
-                objPoints.Clear();
-                processedIds.Clear();
+                Solve().Forget();
             }
-        }
-
-        private void Visualize()
-        {
-            observedPointParent.position = origin.position;
-            objPointParent.position = targets.position;
-
-            for (int i = 0; i < imgPoints.Count; i++)
+            else
             {
-                var imgPoint = imgPoints[i];
-                var objPoint = objPoints[i];
-
-                var opTransform = objPointParent.GetChild(i);
-                opTransform.localPosition = objPoints[i]; //local in targets space
-
-                var obspTransform = observedPointParent.GetChild(i);
-                var cameraDir = new Vector3(imgPoint.x, imgPoint.y, 1); //local in sensor space
-                var ray = new Ray(solvedPosition, solvedRotation * cameraDir); //local in origin space
-                var distance = Vector3.Distance(targets.TransformPoint(objPoint), origin.TransformPoint(solvedPosition));
-                obspTransform.localPosition = ray.GetPoint(distance);
-            }
-
-            objPointParent.gameObject.SetActive(true);
-            observedPointParent.gameObject.SetActive(true);
-        }
-
-        private void SolvePose()
-        {
-            //using direction vectors where proper cm and dcs were already applied so use identity and zero distortion here
-            float[] cm = new float[] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
-            float[] dcs = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-
-            if (OpenCVWrapper.GetCameraPose(objPoints.ToArray(), imgPoints.ToArray(), cm, dcs, out UnityEngine.Pose p))
-            {
-                solvedPosition = origin.InverseTransformPoint(targets.TransformPoint(p.position));
-                Debug.Log($"[EyeTrackingCalibration] sensor local position: {solvedPosition}");
-
-                solvedRotation = targets.rotation * p.rotation;
-                Debug.Log($"[EyeTrackingCalibration] sensor world rotation: {solvedRotation.eulerAngles}");
-                solvedRotation = Quaternion.Inverse(origin.rotation) * solvedRotation;
-                Debug.Log($"[EyeTrackingCalibration] sensor local rotation: {solvedRotation.eulerAngles}");
-
-                outTxt.SetText($"Pos: {solvedPosition.x}, {solvedPosition.y}, {solvedPosition.z}<br>Rot: {solvedRotation.eulerAngles.x}, {solvedRotation.eulerAngles.y}, {solvedRotation.eulerAngles.z}");
-                outUi.SetActive(true);
-
-                calibrationFinished.Invoke(solvedPosition, solvedRotation.eulerAngles);
+                StartCoroutine(ShowNextRoutine());
             }
         }
 
