@@ -355,6 +355,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Calibration
       objectReference: {fileID: 0}
+    - target: {fileID: 6141692667669247634, guid: 92009d37c15e76a47aec4e4690982b47, type: 3}
+      propertyPath: solver
+      value: 
+      objectReference: {fileID: 867479603}
     - target: {fileID: 6141692667669247635, guid: 92009d37c15e76a47aec4e4690982b47, type: 3}
       propertyPath: m_RootOrder
       value: 0
