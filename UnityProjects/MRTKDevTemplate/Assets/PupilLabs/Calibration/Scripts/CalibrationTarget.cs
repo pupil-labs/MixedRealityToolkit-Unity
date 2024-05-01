@@ -1,15 +1,14 @@
 using UnityEngine;
 
-namespace PupilLabs
+namespace PupilLabs.Calibration
 {
     public class CalibrationTarget : MonoBehaviour
     {
-        public Transform center;
         public EyeTrackingCalibration calibration;
 
         public void OnTargetSelected()
         {
-            calibration.AddObjPoint(center.position, gameObject.GetInstanceID());
+            calibration.AddObservation(transform.position);
         }
     }
 }
