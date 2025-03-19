@@ -12,12 +12,12 @@ namespace PupilLabs.PICO
 
         private void Start()
         {
-            PXR_Boundary.EnableSeeThroughManual(SeeThroughEnabled);
+            PXR_Manager.EnableVideoSeeThrough = SeeThroughEnabled;
         }
 
         public void EnableSeeThrough(bool enabled)
         {
-            PXR_Boundary.EnableSeeThroughManual(enabled);
+            PXR_Manager.EnableVideoSeeThrough = enabled;
             seeThroughEnabled = enabled;
         }
 
@@ -25,7 +25,7 @@ namespace PupilLabs.PICO
         {
             if (!pause)
             {
-                PXR_Boundary.EnableSeeThroughManual(SeeThroughEnabled);
+                PXR_Manager.EnableVideoSeeThrough = SeeThroughEnabled;
             }
         }
     }
