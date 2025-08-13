@@ -60,7 +60,7 @@
       "dependencies": {}
     },
     "com.pupil-labs.neon-xr.core": {
-      "version": "https://github.com/pupil-labs/neon-xr.git?path=/com.pupil-labs.neon-xr.core",
+      "version": "https://github.com/pupil-labs/neon-xr.git?path=/com.pupil-labs.neon-xr.core#udp",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -68,7 +68,7 @@
         "com.unity.inputsystem": "1.6.1",
         "com.unity.xr.interaction.toolkit": "2.3.0"
       },
-      "hash": "2cfd2b672f0a2b110021c7e73856a920f889e924"
+      "hash": "fb5a097d82e0d14d2dd1abd10c767086c0b39491"
     },
     "com.unity.addressables": {
       "version": "1.21.19",
