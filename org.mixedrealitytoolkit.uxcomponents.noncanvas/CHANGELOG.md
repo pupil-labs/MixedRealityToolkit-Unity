@@ -2,7 +2,22 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [3.1.3-development] - 2024-04-17
+## Unreleased
+
+### Fixed
+
+* Updated dependencies to match Unity Asset Store packages. [PR #1054](https://github.com/MixedRealityToolkit/MixedRealityToolkit-Unity/pull/1054)
+  * org.mixedrealitytoolkit.uxcore 3.3.0
+  * org.mixedrealitytoolkit.spatialmanipulation 3.4.0
+  * org.mixedrealitytoolkit.standardassets 3.2.1
+
+## [3.1.4] - 2024-09-18
+
+### Changed
+
+* Package patch version update to allow UPM publishing
+
+## [3.1.3] - 2024-04-17
 
 ### Fixed
 
