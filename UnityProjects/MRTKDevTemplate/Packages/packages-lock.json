@@ -41,7 +41,7 @@
       "url": "https://packages.unity.com"
     },
     "com.pupil-labs.neon-xr.core": {
-      "version": "https://github.com/pupil-labs/neon-xr.git?path=/com.pupil-labs.neon-xr.core",
+      "version": "https://github.com/pupil-labs/neon-xr.git?path=/com.pupil-labs.neon-xr.core#udp",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -49,7 +49,7 @@
         "com.unity.inputsystem": "1.6.1",
         "com.unity.xr.interaction.toolkit": "2.3.0"
       },
-      "hash": "2cfd2b672f0a2b110021c7e73856a920f889e924"
+      "hash": "86edb32e8ab28b56880ee8cdeb31278c524bce42"
     },
     "com.unity.addressables": {
       "version": "1.21.19",

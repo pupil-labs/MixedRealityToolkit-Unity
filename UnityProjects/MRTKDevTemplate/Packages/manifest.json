@@ -2,7 +2,7 @@
   "dependencies": {
     "com.microsoft.mixedreality.openxr": "1.11.2",
     "com.microsoft.mixedreality.visualprofiler": "https://github.com/microsoft/VisualProfiler-Unity.git#v2.2.0",
-    "com.pupil-labs.neon-xr.core": "https://github.com/pupil-labs/neon-xr.git?path=/com.pupil-labs.neon-xr.core",
+    "com.pupil-labs.neon-xr.core": "https://github.com/pupil-labs/neon-xr.git?path=/com.pupil-labs.neon-xr.core#udp",
     "com.microsoft.mrtk.graphicstools.unity": "0.8.0",
     "com.microsoft.mrtk.tts.windows": "1.0.4",
     "com.microsoft.spatialaudio.spatializer.unity": "2.0.55",
