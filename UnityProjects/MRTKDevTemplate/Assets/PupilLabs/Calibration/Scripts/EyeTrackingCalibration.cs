@@ -31,7 +31,7 @@ namespace PupilLabs.Calibration
         private int currentTargetId = 0;
         private CalibrationTarget[] calibrationTargets = null;
 
-        private void Awake()
+        private void Start()
         {
             outUi.SetActive(false);
             if (gazeDataProvider == null)
