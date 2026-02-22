@@ -31,9 +31,9 @@ namespace PupilLabs.Analysis
             SetupTexture();
         }
 
-        public void OnHit(RaycastHit hit)
+        public void OnHit(Transform hitTransform, Vector3 hitPoint, Vector2 textureCoord)
         {
-            StartCoroutine(DrawAt(hit.textureCoord));
+            StartCoroutine(DrawAt(textureCoord));
         }
 
         private void SetupTexture()
