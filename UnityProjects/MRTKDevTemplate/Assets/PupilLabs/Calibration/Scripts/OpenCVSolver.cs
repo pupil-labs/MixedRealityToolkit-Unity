@@ -6,6 +6,8 @@ namespace PupilLabs.Calibration
 {
     public class OpenCVSolver : PoseSolver
     {
+        public override bool RotationOnly => false;
+
         public override void AddSample(Vector3 referencePoint, Vector3 observedDirection)
         {
             observedDirections.Add(observedDirection / observedDirection.z); //sensor space, z must be 1 since it will be ignored, we will be using identity camera matrix and zero dist coeffs

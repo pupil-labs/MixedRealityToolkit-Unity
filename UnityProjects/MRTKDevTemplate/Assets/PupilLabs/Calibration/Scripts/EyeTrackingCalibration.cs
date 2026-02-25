@@ -62,6 +62,13 @@ namespace PupilLabs.Calibration
         {
             canSave = false;
             solver.SetVisualizationActive(true); //prior to solve just to see live update of iterative kabsch
+
+            if (solver.RotationOnly)
+            {
+                await storage.WhenReady();
+                solver.FallbackPos = storage.Config.sensorCalibration.offset.position.ToVector3();
+            }
+
             await solver.Solve();
             solvedPosition = solver.Solution.GetPosition();
             solvedRotation = solver.Solution.rotation;
